@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: type-7
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: type-7
+  template:
+    metadata:
+      labels:
+        app: type-7
+    spec:
+      containers:
+        - name: type-6
+          image: docker.io/timattt/type-7:latest
+          imagePullPolicy: Always
+          env:
+            - name: REACT_APP_TYPE7_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: type-6-basic-secrets
+                  key: type_6_client_id
+            - name: REACT_APP_TYPE7_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: type-6-basic-secrets
+                  key: type_6_client_secret
+            - name: REACT_APP_TYPE7_REDIRECT_URI
+              value: https://netmapa.ru/code
+            - name: REACT_APP_TYPE7_SERVER_IP
+              value: https://shlim-tech.ru
+            - name: SSL_CRT_FILE
+              value: /etc/secrets/type-7-certificate
+            - name: SSL_KEY_FILE
+              value: /etc/secrets/type-7-key
+            - name: HTTPS
+              value: "true"
+          volumeMounts:
+            - name: secret-volume
+              mountPath: /etc/secrets
+              readOnly: true
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: type-7-basic-secret-files
