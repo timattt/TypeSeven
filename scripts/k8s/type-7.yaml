@@ -28,7 +28,7 @@ spec:
                   name: type-6-basic-secrets
                   key: type_6_client_secret
             - name: REACT_APP_TYPE7_REDIRECT_URI
-              value: https://netmapa.ru/code
+              value: https://netmapa.online/code
             - name: REACT_APP_TYPE7_SERVER_IP
               value: https://shlim-tech.ru
             - name: SSL_CRT_FILE
