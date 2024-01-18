@@ -22,6 +22,13 @@ export const authReducer = (state = initialState(), action) => {
             console.log("REDUCER: [loaded user info]")
             console.log(action.payload)
             return {...state, userInfo: action.payload}
+        case AuthActionTypes.loadMetadata:
+            console.log("REDUCER: [loaded user metadata]")
+            console.log(action.payload)
+            return {...state, metadata: action.payload}
+        case AuthActionTypes.saveMetadata:
+            console.log("REDUCER: [saved metadata]")
+            return state
         default: {
             return state
         }

@@ -105,3 +105,17 @@ export function loadUserInfo() {
     }
 }
 
+export function loadMetadata() {
+    console.log("Action: [loadMetadata]")
+    return dispatch => {
+        return axios.get(metadataServerUrl + '/get', {
+            headers: {
+                'Authorization': 'Bearer ' + getAccessToken()
+            }}).then(res => {
+            dispatch({type: AuthActionTypes.loadMetadata, payload: res.data})
+        }).catch(err => {
+            console.log("HTTP request to [/get] failed with error:" + err)
+        })
+    }
+}
+
