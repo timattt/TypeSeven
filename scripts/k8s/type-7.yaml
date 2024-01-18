@@ -17,6 +17,8 @@ spec:
           image: docker.io/timattt/type-7:latest
           imagePullPolicy: Always
           env:
+            - name: REACT_APP_TYPE7_METADATA_SERVER_IP
+              value: https://shlim-tech.ru/metadata
             - name: REACT_APP_TYPE7_CLIENT_ID
               valueFrom:
                 secretKeyRef:

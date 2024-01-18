@@ -7,11 +7,10 @@ import {
 } from "../token-manager";
 
 const serverUrl = process.env.REACT_APP_TYPE7_SERVER_IP
+const metadataServerUrl = process.env.REACT_APP_TYPE7_METADATA_SERVER_IP
 const clientId = process.env.REACT_APP_TYPE7_CLIENT_ID
 const clientSecret = process.env.REACT_APP_TYPE7_CLIENT_SECRET
 const redirectUri = process.env.REACT_APP_TYPE7_REDIRECT_URI
-
-axios.defaults.baseURL = serverUrl;
 
 function generateClientAuthPayload() {
     return 'Basic ' + btoa(clientId + ":" + clientSecret)
@@ -33,7 +32,7 @@ export function exchangeCodeToToken(code) {
         payload.append('code', code)
         payload.append('redirect_uri', redirectUri)
         payload.append('client_id', clientId)
-        return axios.post('/oauth2/token', payload, {
+        return axios.post(serverUrl + '/oauth2/token', payload, {
                 headers: {
                     'Content-type': 'application/url-form-encoded',
                     'Authorization': generateClientAuthPayload()
@@ -52,7 +51,7 @@ export function checkTokenValid() {
     return dispatch => {
         let payload = new FormData()
         payload.append('token', getAccessToken())
-        return axios.post('/oauth2/introspect', payload, {
+        return axios.post(serverUrl + '/oauth2/introspect', payload, {
             headers: {
                 'Content-type': 'application/url-form-encoded',
                 'Authorization': generateClientAuthPayload()
@@ -78,7 +77,7 @@ export function refreshAccessToken() {
         payload.append('refresh_token', getRefreshToken())
         payload.append('redirect_uri', redirectUri)
         payload.append('client_id', clientId)
-        return axios.post('/oauth2/token', payload, {
+        return axios.post(serverUrl + '/oauth2/token', payload, {
             headers: {
                 'Content-type': 'application/url-form-encoded',
                 'Authorization': generateClientAuthPayload()
@@ -95,7 +94,7 @@ export function refreshAccessToken() {
 export function loadUserInfo() {
     console.log("Action: [loadUserInfo]")
     return dispatch => {
-        return axios.get('/user-info', {
+        return axios.get(metadataServerUrl + '/user-info', {
             headers: {
             'Authorization': 'Bearer ' + getAccessToken()
         }}).then(res => {
