@@ -1,4 +1,3 @@
-import {applyMiddleware, createStore} from "redux";
 import { thunk } from 'redux-thunk'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Provider} from 'react-redux'
@@ -10,6 +9,9 @@ import HomePage from "./pages/home-page";
 import SuccessfulAuthorizationPage from "./pages/successful-authorization-page";
 import CodePage from "./pages/code-page";
 import { configureStore } from '@reduxjs/toolkit'
+import {Header} from "./pages/header";
+import ProfilePage from "./pages/profile-page";
+import MatchPage from "./pages/match-page";
 
 const store = configureStore({
   reducer: rootReducer,
@@ -20,12 +22,16 @@ function App() {
   return <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route element={<LoginPage/>} path="/login"/>
-        <Route element={<UnauthorizedPage/>} path="/unauthorized"/>
-        <Route element={<HomePage/>} path="/"/>
-        <Route element={<CodePage/>} path="/code"/>
-        <Route element={<PrivateRoutes />}>
-          <Route element={<SuccessfulAuthorizationPage/>} path="/authorized"/>
+        <Route element={<Header/>} path="/">
+          <Route element={<LoginPage/>} path="/login"/>
+          <Route element={<UnauthorizedPage/>} path="/unauthorized"/>
+          <Route element={<HomePage/>} path="/"/>
+          <Route element={<CodePage/>} path="/code"/>
+          <Route element={<PrivateRoutes />}>
+            <Route element={<SuccessfulAuthorizationPage/>} path="/authorized"/>
+            <Route element={<ProfilePage/>} path="/profile"/>
+            <Route element={<MatchPage/>} path="/match"/>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

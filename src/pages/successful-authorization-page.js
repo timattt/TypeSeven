@@ -1,27 +1,33 @@
 import {connect} from "react-redux";
-import {loadUserInfoAndMetadata} from "../store/actions/auth-actions";
-import {useEffect} from "react";
+import {Box, Button, Card, CardActions, CardContent, Typography} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 const SuccessfulAuthorizationPage = (props) => {
-    useEffect(() => {
-        if (props.userInfo === undefined) {
-            props.loadUserInfoAndMetadata()
-        }
-    })
-    return <div>
-        <h1>Successful authorization</h1>
-        <h2>Welcome, {props.userInfo ? props.userInfo.email : "..."}</h2>
-    </div>
+    const navigate = useNavigate()
+    return <Box>
+            <Card>
+                <CardContent>
+                    <Typography variant="h6">
+                        Добро пожаловать, {props.userInfo ? props.userInfo.email : "..."}!
+                    </Typography>
+                    <Typography variant="h8">
+                        Вы успешно авторизировались, теперь заполните, пожалуйста, о себе анкету, и после вам будут доступны близкие по интересам люди.
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small" onClick={() => navigate("/profile")}>Заполнить анкету</Button>
+                </CardActions>
+            </Card>
+    </Box>
 }
 
 export default connect(
     (state) => {
         return {
-            userInfo: state.authReducer.userInfo,
-            metadata: state.authReducer.metadata
+            userInfo: state.userInfoReducer.userInfo
         }
     },
     (dispatch) => {
-        return {loadUserInfoAndMetadata: () => dispatch(loadUserInfoAndMetadata())}
+        return {}
     }
 )(SuccessfulAuthorizationPage);

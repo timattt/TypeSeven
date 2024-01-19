@@ -1,16 +1,11 @@
 import axios from "axios";
-import {AuthActionTypes} from "../constants";
+import {AuthActionTypes, clientId, clientSecret, metadataServerUrl, redirectUri, serverUrl} from "../constants";
 import {
     getAccessToken,
     getRefreshToken,
     hasRefreshToken
 } from "../token-manager";
-
-const serverUrl = process.env.REACT_APP_TYPE7_SERVER_IP
-const metadataServerUrl = process.env.REACT_APP_TYPE7_METADATA_SERVER_IP
-const clientId = process.env.REACT_APP_TYPE7_CLIENT_ID
-const clientSecret = process.env.REACT_APP_TYPE7_CLIENT_SECRET
-const redirectUri = process.env.REACT_APP_TYPE7_REDIRECT_URI
+import {loadUserInfo} from "./user-info-actions";
 
 function generateClientAuthPayload() {
     return 'Basic ' + btoa(clientId + ":" + clientSecret)
@@ -46,6 +41,11 @@ export function exchangeCodeToToken(code) {
     }
 }
 
+/**
+ * Used only in private-route
+ * @returns {function(*): Promise<void>}
+ */
+// TODO remove this
 export function checkTokenValid() {
     console.log("Action: [checkTokenValid]")
     return dispatch => {
@@ -55,14 +55,14 @@ export function checkTokenValid() {
             headers: {
                 'Authorization': 'Bearer ' + getAccessToken()
             }}).then(res => {
-            if (!res.data.active && hasRefreshToken()) {
-                dispatch(refreshAccessToken())
-            } else {
-                dispatch({type: AuthActionTypes.checkTokenValid, payload: res.data.active})
-            }
+                dispatch({type: AuthActionTypes.checkTokenValid, payload: true})
         }).catch(err => {
             console.log("HTTP request to [/check] failed with error:" + err)
-            dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
+            if (hasRefreshToken()) {
+                dispatch(refreshAccessToken())
+            } else {
+                dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
+            }
         });
     }
 }
@@ -86,6 +86,10 @@ export function introspectToken() {
     }
 }
 
+/**
+ * Used as chain from this file
+ * @returns {function(*): Promise<void>}
+ */
 export function refreshAccessToken() {
     console.log("Action: [refreshAccessToken]")
     return dispatch => {
@@ -101,38 +105,10 @@ export function refreshAccessToken() {
             }
         }).then(response => {
             dispatch({type: AuthActionTypes.refreshAccessToken, payload: {access: response.data["access_token"], refresh: response.data["refresh_token"]}})
+            dispatch(loadUserInfo())
         }).catch(err => {
             console.log("HTTP request to [/oauth2/token] failed with error:" + err)
             dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
         });
     }
 }
-
-export function loadUserInfoAndMetadata() {
-    console.log("Action: [loadUserInfo]")
-    return dispatch => {
-        return axios.get(metadataServerUrl + '/user-info', {
-            headers: {
-            'Authorization': 'Bearer ' + getAccessToken()
-        }}).then(res => {
-            dispatch({type: AuthActionTypes.loadUserInfoAndMetadata, payload: res.data})
-        }).catch(err => {
-            console.log("HTTP request to [/user-info] failed with error:" + err)
-        })
-    }
-}
-
-export function loadMetadata() {
-    console.log("Action: [loadMetadata]")
-    return dispatch => {
-        return axios.get(metadataServerUrl + '/get', {
-            headers: {
-                'Authorization': 'Bearer ' + getAccessToken()
-            }}).then(res => {
-            dispatch({type: AuthActionTypes.loadMetadata, payload: res.data})
-        }).catch(err => {
-            console.log("HTTP request to [/get] failed with error:" + err)
-        })
-    }
-}
-

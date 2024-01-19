@@ -1,10 +1,32 @@
-import {Link} from "react-router-dom";
+import {Box, Button, Card, CardActions, CardContent, Typography} from "@mui/material";
+import {connect} from "react-redux";
+import {performAuthorization} from "../store/actions/auth-actions";
 
-export default function UnauthorizedPage() {
-    return <div>
-        <h1>Unauthorized</h1>
-        <Link to="/">Home</Link>
-        <br/>
-        <Link to="/login">Login</Link>
-    </div>
+const UnauthorizedPage = (props) => {
+    return <Box>
+            <Card>
+                <CardContent>
+                    <Typography variant="h6">
+                        Вы не авторизированны
+                    </Typography>
+                    <Typography variant="h8">
+                        Пожалуйста, войдите в сервис через вашу студенческую почту, чтобы мы могли вас идентифицировать.
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small" onClick={props.performAuthorization}>Войти</Button>
+                </CardActions>
+            </Card>
+    </Box>
 }
+
+export default connect(
+    (state) => {
+        return {
+            authResult: state.authReducer.authResult
+        }
+    },
+    (dispatch) => {
+        return {performAuthorization: () => dispatch(performAuthorization())}
+    }
+)(UnauthorizedPage);

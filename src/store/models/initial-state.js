@@ -4,5 +4,6 @@ export const initialState = () => ({
     authorized: hasTokens() && window.location.pathname !== "/code",
     // this is to ensure that it is not authorized when entering /code page
     userInfo: undefined,
-    metadata: undefined
+    metadata: undefined,
+    loadedUsers: []
 })

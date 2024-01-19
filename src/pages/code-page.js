@@ -16,9 +16,7 @@ const CodePage = (props) => {
         }
     }, [code, navigate, props, props.authorized])
 
-    return <div>
-        <h1>Received code</h1>
-    </div>
+    return <div></div>
 }
 
 export default connect(
