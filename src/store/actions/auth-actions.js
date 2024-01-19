@@ -51,17 +51,34 @@ export function checkTokenValid() {
     return dispatch => {
         let payload = new FormData()
         payload.append('token', getAccessToken())
+        return axios.get(metadataServerUrl + '/check', {
+            headers: {
+                'Authorization': 'Bearer ' + getAccessToken()
+            }}).then(res => {
+            if (!res.data.active && hasRefreshToken()) {
+                dispatch(refreshAccessToken())
+            } else {
+                dispatch({type: AuthActionTypes.checkTokenValid, payload: res.data.active})
+            }
+        }).catch(err => {
+            console.log("HTTP request to [/check] failed with error:" + err)
+            dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
+        });
+    }
+}
+
+export function introspectToken() {
+    console.log("Action: [introspectToken]")
+    return dispatch => {
+        let payload = new FormData()
+        payload.append('token', getAccessToken())
         return axios.post(serverUrl + '/oauth2/introspect', payload, {
             headers: {
                 'Content-type': 'application/url-form-encoded',
                 'Authorization': generateClientAuthPayload()
             }
         }).then(res => {
-            if (!res.data.active && hasRefreshToken()) {
-                dispatch(refreshAccessToken())
-            } else {
-                dispatch({type: AuthActionTypes.checkTokenValid, payload: res.data.active})
-            }
+            dispatch({type: AuthActionTypes.checkTokenValid, payload: true})
         }).catch(err => {
             console.log("HTTP request to [/oauth2/introspect] failed with error:" + err)
             dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
@@ -91,14 +108,14 @@ export function refreshAccessToken() {
     }
 }
 
-export function loadUserInfo() {
+export function loadUserInfoAndMetadata() {
     console.log("Action: [loadUserInfo]")
     return dispatch => {
         return axios.get(metadataServerUrl + '/user-info', {
             headers: {
             'Authorization': 'Bearer ' + getAccessToken()
         }}).then(res => {
-            dispatch({type: AuthActionTypes.loadUserInfo, payload: res.data})
+            dispatch({type: AuthActionTypes.loadUserInfoAndMetadata, payload: res.data})
         }).catch(err => {
             console.log("HTTP request to [/user-info] failed with error:" + err)
         })

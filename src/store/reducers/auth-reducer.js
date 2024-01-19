@@ -18,10 +18,10 @@ export const authReducer = (state = initialState(), action) => {
                 console.log("REDUCER: [tokens are valid]")
             }
             return {...state, authorized: action.payload}
-        case AuthActionTypes.loadUserInfo:
+        case AuthActionTypes.loadUserInfoAndMetadata:
             console.log("REDUCER: [loaded user info]")
             console.log(action.payload)
-            return {...state, userInfo: action.payload}
+            return {...state, userInfo: action.payload, metadata: action.payload.metadata}
         case AuthActionTypes.loadMetadata:
             console.log("REDUCER: [loaded user metadata]")
             console.log(action.payload)

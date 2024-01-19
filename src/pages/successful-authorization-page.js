@@ -1,14 +1,11 @@
 import {connect} from "react-redux";
-import {loadMetadata, loadUserInfo} from "../store/actions/auth-actions";
+import {loadUserInfoAndMetadata} from "../store/actions/auth-actions";
 import {useEffect} from "react";
 
 const SuccessfulAuthorizationPage = (props) => {
     useEffect(() => {
         if (props.userInfo === undefined) {
-            props.loadUserInfo()
-        }
-        if (props.metadata === undefined) {
-            props.loadMetadata()
+            props.loadUserInfoAndMetadata()
         }
     })
     return <div>
@@ -25,6 +22,6 @@ export default connect(
         }
     },
     (dispatch) => {
-        return {loadUserInfo: () => dispatch(loadUserInfo()), loadMetadata: () => dispatch(loadMetadata())}
+        return {loadUserInfoAndMetadata: () => dispatch(loadUserInfoAndMetadata())}
     }
 )(SuccessfulAuthorizationPage);
