@@ -1,6 +1,7 @@
 import {Box, Card, CardActions, CardContent, Typography} from "@mui/material";
 import {connect} from "react-redux";
 import {loadAll} from "../store/actions/user-info-actions";
+import {useEffect} from "react";
 
 const NoMatchPane = () => {
     return <Box>
@@ -61,9 +62,12 @@ const MatchPage = connect(
 )((props) => {
 
     // Каждую секунду скачиваем данные еще раз - вдруг нам завезли мэтч
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
         props.loadAll()
     }, 1000)
+    useEffect(() => () => {
+        clearTimeout(timeoutId)
+    });
 
     let users = []
     if (props.metadata !== undefined) {
