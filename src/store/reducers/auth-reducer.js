@@ -10,7 +10,7 @@ export const authReducer = (state = initialState(), action) => {
                 setAccessToken(action.payload.access)
                 setRefreshToken(action.payload.refresh)
                 return {...state, authorized: true}
-        case AuthActionTypes.checkTokenValid:
+        case AuthActionTypes.updateTokenState:
             if (!action.payload) {
                 //console.log("REDUCER: [clear tokens]")
                 clearTokens()
@@ -18,17 +18,6 @@ export const authReducer = (state = initialState(), action) => {
                 //console.log("REDUCER: [tokens are valid]")
             }
             return {...state, authorized: action.payload}
-        case AuthActionTypes.loadUserInfo:
-            //console.log("REDUCER: [loaded user info and metadata]")
-            //console.log(action.payload)
-            return {...state, userInfo: action.payload, metadata: action.payload.metadata}
-        case AuthActionTypes.loadMetadata:
-            //console.log("REDUCER: [loaded user metadata]")
-            //console.log(action.payload)
-            return {...state, metadata: action.payload}
-        case AuthActionTypes.saveMetadata:
-            //console.log("REDUCER: [saved metadata]")
-            return state
         default: {
             return state
         }

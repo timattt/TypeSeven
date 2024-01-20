@@ -4,12 +4,9 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export const userInfoReducer = (state = initialState(), action) => {
     switch (action.type) {
-        case UserInfoActionTypes.loadUserInfo:
+        case UserInfoActionTypes.loadAll:
             //console.log("REDUCER: [loaded user info and metadata]")
-            return {...state, userInfo: action.payload, metadata: action.payload.metadata}
-        case UserInfoActionTypes.loadMetadata:
-            //console.log("REDUCER: [loaded user metadata]")
-            return {...state, metadata: action.payload}
+            return {...state, userInfo: action.payload.user, metadata: action.payload.metadata}
         case UserInfoActionTypes.saveMetadata:
             //console.log("REDUCER: [saved metadata]")
             return {...state}
@@ -28,12 +25,6 @@ export const userInfoReducer = (state = initialState(), action) => {
                 }
             })
             return {...state, metadata: metadata}
-        case UserInfoActionTypes.loadOtherUserInfo:
-            //console.log("REDUCER: [loaded other user info]")
-            return {...state, loadedUsers: [...state.loadedUsers, action.payload]}
-        case UserInfoActionTypes.invalidateMetadata:
-            //console.log("REDUCER: [invalidated metadata]")
-            return {...state, metadata: undefined}
         default: {
             return state
         }

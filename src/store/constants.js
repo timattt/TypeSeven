@@ -1,16 +1,13 @@
 export const AuthActionTypes = {
     authorize: "AUTHORIZE",
-    checkTokenValid: "CHECK_TOKEN_VALID",
+    updateTokenState: "CHECK_TOKEN_VALID",
     refreshAccessToken: "REFRESH_ACCESS_TOKEN",
 }
 
 export const UserInfoActionTypes = {
-    loadUserInfo: "LOAD_USER_INFO",
-    loadMetadata: "LOAD_META_DATA",
+    loadAll: "LOAD_USER_INFO",
     saveMetadata: "SAVE_METADATA",
-    changeEntry: "CHANGE_ENTRY",
-    loadOtherUserInfo: "LOAD_OTHER_USER",
-    invalidateMetadata: "INVALIDATE_METADATA"
+    changeEntry: "CHANGE_ENTRY"
 }
 
 export const serverUrl = process.env.REACT_APP_TYPE7_SERVER_IP

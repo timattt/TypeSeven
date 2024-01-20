@@ -1,6 +1,6 @@
 import {Box, Card, CardActions, CardContent, Typography} from "@mui/material";
 import {connect} from "react-redux";
-import {loadOtherUser, loadUserInfo} from "../store/actions/user-info-actions";
+import {loadAll} from "../store/actions/user-info-actions";
 
 const NoMatchPane = () => {
     return <Box>
@@ -52,26 +52,22 @@ const ContentHolder = (props) => {
 const MatchPage = connect(
     (state) => {
         return {
-            metadata: state.userInfoReducer.metadata,
-            loadedUsers: state.userInfoReducer.loadedUsers
+            metadata: state.userInfoReducer.metadata
         }
     },
     (dispatch) => {
-        return {loadOtherUser: (id) => dispatch(loadOtherUser(id)), loadUserInfo: () => dispatch(loadUserInfo())}
+        return {loadAll: () => dispatch(loadAll())}
     }
 )((props) => {
-    
+
     // Каждую секунду скачиваем данные еще раз - вдруг нам завезли мэтч
     setTimeout(() => {
-        props.loadUserInfo()
-        if (props.metadata !== undefined) {
-            props.metadata.selectedUsers.forEach(id => props.loadOtherUser(id))
-        }
+        props.loadAll()
     }, 1000)
 
     let users = []
     if (props.metadata !== undefined) {
-        users = props.metadata.selectedUsers.map(id => props.loadedUsers.filter(user => user.id === id).slice(0, 1)).flat(1)
+        users = props.metadata.selectedUsers
     }
 
     // IF THERE IS NO USERS LOADED SO SHOW BAD PAGE

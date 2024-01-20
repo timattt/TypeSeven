@@ -5,7 +5,7 @@ import {
     getRefreshToken,
     hasRefreshToken
 } from "../token-manager";
-import {loadUserInfo} from "./user-info-actions";
+import {loadAll} from "./user-info-actions";
 
 function generateClientAuthPayload() {
     return 'Basic ' + btoa(clientId + ":" + clientSecret)
@@ -41,32 +41,6 @@ export function exchangeCodeToToken(code) {
     }
 }
 
-/**
- * Used only in private-route
- * @returns {function(*): Promise<void>}
- */
-// TODO remove this
-export function checkTokenValid() {
-    console.log("Action: [checkTokenValid]")
-    return dispatch => {
-        let payload = new FormData()
-        payload.append('token', getAccessToken())
-        return axios.get(metadataServerUrl + '/check', {
-            headers: {
-                'Authorization': 'Bearer ' + getAccessToken()
-            }}).then(res => {
-                dispatch({type: AuthActionTypes.checkTokenValid, payload: true})
-        }).catch(err => {
-            console.log("HTTP request to [/check] failed with error:" + err)
-            if (hasRefreshToken()) {
-                dispatch(refreshAccessToken())
-            } else {
-                dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
-            }
-        });
-    }
-}
-
 export function introspectToken() {
     console.log("Action: [introspectToken]")
     return dispatch => {
@@ -78,10 +52,10 @@ export function introspectToken() {
                 'Authorization': generateClientAuthPayload()
             }
         }).then(res => {
-            dispatch({type: AuthActionTypes.checkTokenValid, payload: true})
+            dispatch({type: AuthActionTypes.updateTokenState, payload: true})
         }).catch(err => {
             console.log("HTTP request to [/oauth2/introspect] failed with error:" + err)
-            dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
+            dispatch({type: AuthActionTypes.updateTokenState, payload: false})
         });
     }
 }
@@ -105,10 +79,10 @@ export function refreshAccessToken() {
             }
         }).then(response => {
             dispatch({type: AuthActionTypes.refreshAccessToken, payload: {access: response.data["access_token"], refresh: response.data["refresh_token"]}})
-            dispatch(loadUserInfo())
+            dispatch(loadAll())
         }).catch(err => {
             console.log("HTTP request to [/oauth2/token] failed with error:" + err)
-            dispatch({type: AuthActionTypes.checkTokenValid, payload: false})
+            dispatch({type: AuthActionTypes.updateTokenState, payload: false})
         });
     }
 }
