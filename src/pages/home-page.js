@@ -15,10 +15,10 @@ export default function HomePage() {
             <Card>
                 <CardContent>
                     <Typography variant="h6">
-                        MIPT.match
+                        MIPT.Match
                     </Typography>
                     <Typography variant="h8">
-                        - это студенческий open-source-проект, призванный помочь людям из разных ВУЗов познакомится
+                        - это студенческий open-source-проект, призванный помочь людям из разных ВУЗов познакомиться
                         друг с другом.
                         <br/>
                         <br/>
