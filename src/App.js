@@ -9,7 +9,7 @@ import HomePage from "./pages/home-page";
 import SuccessfulAuthorizationPage from "./pages/successful-authorization-page";
 import CodePage from "./pages/code-page";
 import { configureStore } from '@reduxjs/toolkit'
-import {Header} from "./pages/header";
+import Header from "./pages/header";
 import ProfilePage from "./pages/profile-page";
 import MatchPage from "./pages/match-page";
 

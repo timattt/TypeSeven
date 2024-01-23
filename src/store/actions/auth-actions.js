@@ -1,9 +1,9 @@
 import axios from "axios";
-import {AuthActionTypes, clientId, clientSecret, metadataServerUrl, redirectUri, serverUrl} from "../constants";
+import {AuthActionTypes, clientId, clientSecret, redirectUri, serverUrl} from "../constants";
 import {
+    clearTokens,
     getAccessToken,
-    getRefreshToken,
-    hasRefreshToken
+    getRefreshToken
 } from "../token-manager";
 import {loadAll} from "./user-info-actions";
 
@@ -16,6 +16,15 @@ export function performAuthorization() {
     console.log("Action: [performAuthorization]")
     return dispatch => {
         window.location.replace(`${serverUrl}/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`)
+    }
+}
+
+export function performLogout() {
+    console.log("Action: [performLogout]")
+    console.log(`${serverUrl}/logout`)
+    return () => {
+        clearTokens()
+        window.location.replace(`${serverUrl}/logout`)
     }
 }
 
