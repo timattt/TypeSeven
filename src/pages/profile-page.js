@@ -3,6 +3,32 @@ import {connect} from "react-redux";
 import {changeEntry, saveMetadata} from "../store/actions/user-info-actions";
 import {useNavigate} from "react-router-dom";
 
+function countActiveEntries(entrySet) {
+    return entrySet.entries.filter(entry => entry.flag).length
+}
+
+function ensureValidationIsCorrect(entrySet, changeEntry, wantToSet) {
+    if (wantToSet) {
+        let toUnset = countActiveEntries(entrySet) + 1 - entrySet.maximumChoices
+
+        for (let i = 0; i < entrySet.entries.length && toUnset > 0; i++) {
+            if (entrySet.entries[i].flag) {
+                changeEntry(entrySet.name, entrySet.entries[i].name)
+                toUnset--;
+            }
+        }
+    } else {
+        let toSet = entrySet.minimumChoices - countActiveEntries(entrySet) + 1
+
+        for (let i = 0; i < entrySet.entries.length && toSet > 0; i++) {
+            if (!entrySet.entries[i].flag) {
+                changeEntry(entrySet.name, entrySet.entries[i].name)
+                toSet--;
+            }
+        }
+    }
+}
+
 const EntrySetCard = connect(
     (state) => {
         return {
@@ -22,10 +48,16 @@ const EntrySetCard = connect(
             <Box
                 justifyContent="center"
                 alignItems="center">
-                {props.entrySet.entries.map(entry => <Button sx={{margin: 1, backgroundColor: entry.flag ? "green" : "lightBlue"}} key={"button" + entry.name} onClick={() => {
-                    // если пользователь что-то изменил - меняем поле в сторе
-                    props.changeEntry(props.entrySet.name, entry.name)
-                }}>{entry.name}</Button>)}
+                {props.entrySet.entries.map(entry =>
+                    <Button sx={{margin: 1, backgroundColor: entry.flag ? "green" : "lightBlue"}}
+                            key={"button" + entry.name}
+                            onClick={() => {
+                                ensureValidationIsCorrect(props.entrySet, props.changeEntry, !entry.flag)
+                                // если пользователь что-то изменил - меняем поле в сторе
+                                props.changeEntry(props.entrySet.name, entry.name)
+                            }}
+                    >{entry.name}</Button>)
+                }
             </Box>
         </ButtonGroup>
     </CardContent>
