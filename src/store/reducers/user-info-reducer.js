@@ -25,6 +25,8 @@ export const userInfoReducer = (state = initialState(), action) => {
                 }
             })
             return {...state, metadata: metadata}
+        case UserInfoActionTypes.saveBio:
+            return {...state, userInfo: {...state.userInfo, biography: action.payload}}
         default: {
             return state
         }

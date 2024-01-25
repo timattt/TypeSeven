@@ -7,7 +7,8 @@ export const AuthActionTypes = {
 export const UserInfoActionTypes = {
     loadAll: "LOAD_USER_INFO",
     saveMetadata: "SAVE_METADATA",
-    changeEntry: "CHANGE_ENTRY"
+    changeEntry: "CHANGE_ENTRY",
+    saveBio: "SAVE_BIO"
 }
 
 export const serverUrl = process.env.REACT_APP_TYPE7_SERVER_IP

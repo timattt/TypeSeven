@@ -1,7 +1,8 @@
-import {Box, Button, ButtonGroup, Card, CardContent, Typography} from "@mui/material";
+import {Box, Button, ButtonGroup, Card, CardActions, CardContent, TextField, Typography} from "@mui/material";
 import {connect} from "react-redux";
-import {changeEntry, saveMetadata} from "../store/actions/user-info-actions";
+import {changeEntry, saveBio, saveMetadata} from "../store/actions/user-info-actions";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 function countActiveEntries(entrySet) {
     return entrySet.entries.filter(entry => entry.flag).length
@@ -41,7 +42,7 @@ const EntrySetCard = connect(
 )((props) => {
     return  <CardContent sx={{textAlign: "center"}}>
         <Typography variant="h6">
-            {props.entrySet.name}
+            {props.entrySet.message}
         </Typography>
         <br/>
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
@@ -56,7 +57,7 @@ const EntrySetCard = connect(
                                 // если пользователь что-то изменил - меняем поле в сторе
                                 props.changeEntry(props.entrySet.name, entry.name)
                             }}
-                    >{entry.name}</Button>)
+                    >{entry.message}</Button>)
                 }
             </Box>
         </ButtonGroup>
@@ -77,6 +78,14 @@ const ContentHolder = (props) => {
 
 const ProfilePage = (props) => {
     const navigate = useNavigate()
+    const [bio, setBio] = useState("")
+
+    useEffect(() => {
+        if (props.userInfo !== undefined) {
+            setBio(props.userInfo.biography)
+        }
+    }, [props.userInfo]);
+
     return <Box display="flex"
                 flexDirection="column"
                 justifyContent="center"
@@ -90,11 +99,32 @@ const ProfilePage = (props) => {
             </CardContent>
         </Card>
         <br/>
+        <Card cx={{margin: "10"}}>
+            <CardContent>
+                <Box justifyContent="center" alignItems="center">
+                    <Typography variant="h6">
+                        Напишите что-нибудь о себе
+                    </Typography>
+                    <Typography variant="h7">
+                        И обязательно оставьте ссылку на телегу,
+                        чтобы с вами можно было связаться
+                    </Typography>
+                    <br/>
+                    <br/>
+                    <TextField multiline fullWidth id="outlined-basic" value={bio} variant="outlined"
+                               onChange={(event) => {
+                                   setBio(event.target.value)
+                               }}/>
+                </Box>
+            </CardContent>
+        </Card>
+        <br/>
         <ContentHolder metadata={props.metadata}/>
-        <Card >
+        <Card>
             <Button key="resultButton" size="small" onClick={() => {
                 // если пользователь нажал кнопку - отправляем данные на сервер и переходим на страницу мэтча
                 props.saveMetadata(props.metadata)
+                props.saveBio(bio)
                 navigate("/match")
             }}>Отправить</Button>
         </Card>
@@ -104,10 +134,11 @@ const ProfilePage = (props) => {
 export default connect(
     (state) => {
         return {
-            metadata: state.userInfoReducer.metadata
+            metadata: state.userInfoReducer.metadata,
+            userInfo: state.userInfoReducer.userInfo
         }
     },
     (dispatch) => {
-        return {saveMetadata: (metadata) => dispatch(saveMetadata(metadata))}
+        return {saveMetadata: (metadata) => dispatch(saveMetadata(metadata)), saveBio: (bio) => dispatch(saveBio(bio))}
     }
 )(ProfilePage);

@@ -48,6 +48,21 @@ export function saveMetadata(metadata) {
     }
 }
 
+export function saveBio(bio) {
+    console.log("Action: [saveBio]")
+    return dispatch => {
+        return axios.post(metadataServerUrl + '/set/bio', {bio: bio}, {
+            headers: {
+                'Authorization': 'Bearer ' + getAccessToken(),
+                'Content-Type': 'application/json'
+            }}).then(() => {
+                dispatch({type: UserInfoActionTypes.saveBio, payload: bio})
+            }).catch(err => {
+                console.log("HTTP request to [/set/bio] failed with error:" + err)
+            })
+    }
+}
+
 /**
  * Used in profile page
  * @param entrySetName
