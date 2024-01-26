@@ -29,6 +29,11 @@ const UserCard = (props) => {
             <Typography variant="h8">
                 {props.user.email}
             </Typography>
+            <br/>
+            <br/>
+            <Typography variant="h8">
+                {props.user.biography}
+            </Typography>
         </CardContent>
         <CardActions>
         </CardActions>
