@@ -128,6 +128,9 @@ const ProfilePage = (props) => {
                 navigate("/match")
             }}>Отправить</Button>
         </Card>
+        <br/>
+        <br/>
+        <br/>
     </Box>
 }
 

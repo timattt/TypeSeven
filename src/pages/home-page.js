@@ -30,6 +30,8 @@ export default function HomePage() {
                 <CardActions>
                     <Button size="small" onClick={() => navigate("/login")}>Приступить</Button>
                     <Button size="small" onClick={() => setShowAbout(!showAbout)}>О создателях</Button>
+                </CardActions>
+                <CardActions>
                     <Button size="small" onClick={() => setShowApproval(!showApproval)}>Согласие об обработке персональных данных</Button>
                 </CardActions>
             </Card>
