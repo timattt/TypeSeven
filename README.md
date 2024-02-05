@@ -2,6 +2,10 @@
 
 Клиент для авторизации с [type-6-sso](https://github.com/timattt/TypeSix).
 
+## Для разработчиков
+
+Вот [тут](https://github.com/timattt/TypeSeven/blob/master/scripts/debug) есть инструкция по запуску и тестированию продукта.
+
 ## Конвеер работы
 
 * кликаем на кнопку логин
@@ -18,3 +22,4 @@
 * REACT_APP_TYPE7_CLIENT_SECRET
 * REACT_APP_TYPE7_REDIRECT_URI
 * REACT_APP_TYPE7_SERVER_IP
+* REACT_APP_TYPE7_METADATA_SERVER_IP

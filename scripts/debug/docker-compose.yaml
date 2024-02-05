@@ -1,0 +1,97 @@
+version: '3.4'
+
+services:
+  type-6-database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_IP: localhost
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 1s
+      timeout: 1s
+      retries: 100
+    user: postgres
+  type-6:
+    image: timattt/type-6:latest
+    ports:
+      - "7777:7777"
+    depends_on:
+      type-6-database:
+        condition: service_healthy
+    environment:
+      # DB
+      TYPE6_DATABASE_USER: postgres
+      TYPE6_DATABASE_PASSWORD: postgres
+      TYPE6_DATABASE_URL: jdbc:postgresql://type-6-database:5432/postgres
+      TYPE6_POSTGRES_PORT: 5432
+      TYPE6_POSTGRES_IP: type-6-database
+
+      # CLIENT
+      # Type-7
+      TYPE7_CLIENT_ID: type7-client
+      TYPE7_CLIENT_REDIRECT_URI: http://localhost:3000/code
+      TYPE7_CLIENT_SECRET: type7-secret
+      TYPE7_HOSTNAME: http://localhost:3000
+
+      # Type-8
+      TYPE8_CLIENT_ID: type8-client
+      TYPE8_CLIENT_REDIRECT_URI: http://localhost:3000/code
+      TYPE8_CLIENT_SECRET: type8-secret
+      TYPE8_HOSTNAME: http://localhost:3000
+
+      # SELF
+      TYPE6_PORT: 443
+      TYPE6_SELF_IP: http://type-6:7777
+      TYPE6_ENABLE_SSL: false
+      spring.profiles.active: debug
+
+      # THIRD PARTY
+      TYPE6_GITHUB_CLIENT_ID: aaa
+      TYPE6_GITHUB_CLIENT_SECRET: aaa
+      TYPE6_YANDEX_CLIENT_ID: aaa
+      TYPE6_YANDEX_CLIENT_SECRET: aaa
+  type-7-m:
+    image: timattt/type-7-m:latest
+    ports:
+      - "8888:8888"
+    depends_on:
+      type-6-database:
+        condition: service_healthy
+      type-6:
+        condition: service_started
+    environment:
+      # DB
+      TYPE6_DATABASE_USER: postgres
+      TYPE6_DATABASE_PASSWORD: postgres
+      TYPE6_DATABASE_URL: jdbc:postgresql://type-6-database:5432/postgres
+      TYPE6_POSTGRES_PORT: 5432
+      TYPE6_POSTGRES_IP: type-7-database
+
+      # SELF
+      TYPE7M_ISSUER_URL: http://type-6:7777
+      spring.profiles.active: debug
+      TYPE7_CLIENT_CORS_ALLOWED_ORIGIN: http://localhost:3000
+      TYPE7D_HOST: http://type-7-d:8000
+  type-7-d:
+    image: timattt/type-7-d:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      type-6-database:
+        condition: service_healthy
+    environment:
+      # DB
+      TYPE6_DATABASE_USER: postgres
+      TYPE6_DATABASE_PASSWORD: postgres
+      TYPE6_DATABASE_URL: jdbc:postgresql://type-6-database:5432/postgres
+      TYPE6_POSTGRES_PORT: 5432
+      TYPE6_POSTGRES_IP: type-6-database
+
+      # SELF
+      TYPE7M_ISSUER_URL: http://type-6:7777
+      spring.profiles.active: debug
