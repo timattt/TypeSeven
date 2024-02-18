@@ -18,7 +18,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: REACT_APP_TYPE7_METADATA_SERVER_IP
-              value: https://auth-mipt-match.ru/metadata
+              value: https://service-shlim-tech.ru/metadata
             - name: REACT_APP_TYPE7_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -32,7 +32,7 @@ spec:
             - name: REACT_APP_TYPE7_REDIRECT_URI
               value: https://mipt-match.ru/code
             - name: REACT_APP_TYPE7_SERVER_IP
-              value: https://auth-mipt-match.ru
+              value: https://service-shlim-tech.ru
             - name: SSL_CRT_FILE
               value: /etc/secrets/type-7-certificate
             - name: SSL_KEY_FILE
