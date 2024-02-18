@@ -55,7 +55,7 @@ export default function HomePage() {
                     <CardContent>
                         <Typography variant="h6">Контакты</Typography>
                         <Typography variant="h8">
-                            <a href="https://t.me/timattttt">TimaTTT</a>
+                            <a href="https://t.me/nasyrovTimur">tg</a>
                         </Typography>
                     </CardContent>
                 </Card>
